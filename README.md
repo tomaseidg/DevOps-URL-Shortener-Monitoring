@@ -2,7 +2,7 @@
 
 Monitoring a Containerized URL Shortener Webservice under the supervision of Digital Egypt Pioneers Initiative
 
-![Project Banner](https://drive.google.com/file/d/1avVWO62IfilW49j8yMclbMgdOHLlrJ0K/view?usp=sharing)
+![Project Banner](https://drive.google.com/uc?export=view&id=1avVWO62IfilW49j8yMclbMgdOHLlrJ0K)
 
 ---
 
