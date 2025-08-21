@@ -11,7 +11,7 @@ Monitoring a Containerized URL Shortener Webservice under the supervision of Dig
 - Moaaz Zaki Ismail Zaki.
 - Nourhan Khalid Ahmed Mahmoud.
 - Sherif Mostafa Abdelaziz Mohamed.
-- Mariam Ahmed Soude ElSayed
+- Mariam Ahmed Soude ElSayed.
 
 ---
 
