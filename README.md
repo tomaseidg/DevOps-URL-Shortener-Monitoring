@@ -7,12 +7,11 @@ Monitoring a Containerized URL Shortener Webservice under the supervision of Dig
 ---
 
 ## Team members
-- Thomas Eid Gerges Sureal  
+- Thomas Eid Gerges Sureal.
 - Moaaz Zaki Ismail Zaki  
 - Nourhan Khalid Ahmed Mahmoud  
 - Sherif Mostafa Abdelaziz Mohamed.
 - Mariam Ahmed Soude ElSayed.
-   
 
 ---
 
