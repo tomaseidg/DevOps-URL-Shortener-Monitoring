@@ -44,7 +44,7 @@ Technologies used: **Docker, Docker Compose, Prometheus, Grafana, SQLite, Flask/
 
 ## Project Plan
 
-https://github.com/tomaseidg/DevOps-URL-Shortener-Monitoring/blob/main/Tasks%20and%20Plans
+[Plan](Tasks%20and%20Plans)
 
 The project will run for **4 weeks**, starting from **_/_/__** and ending on **_/_/__**.  
 
