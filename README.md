@@ -42,9 +42,7 @@ Technologies used: **Docker, Docker Compose, Prometheus, Grafana, SQLite, Flask/
 
 ---
 
-## Project Plan
-
-[Plan](Tasks%20and%20Plans)
+## Project Plan [Plan](Tasks%20and%20Plans)
 
 The project will run for **4 weeks**, starting from **_/_/__** and ending on **_/_/__**.  
 
