@@ -40,6 +40,50 @@ services:
     restart: always
     expose:
       - 6379
+########### Monitoring Stack ###########
+  prometheus:   
+    image: prom/prometheus:latest    
+    
+    container_name: prometheus       
+    
+    ports:
+      - "9090:9090"  
+    
+    volumes:   # Mount local prometheus.yml into the container 
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+ 
+    restart: unless-stopped  # Auto-restart Prometheus if it crashes
+
+  grafana:       # Service name (Grafana)
+    
+    image: grafana/grafana:latest    
+    
+    container_name: grafana          
+    
+    ports:
+      - "4000:3000"   
+    
+    volumes:
+      - grafana-storage:/var/lib/grafana  # Use a named volume to persist Grafana data (dashboards, users, settings)
+        
+    restart: unless-stopped
+    depends_on:
+      - prometheus   # Ensure Grafana starts after Prometheus
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    command:
+    - "--docker_only=true"
+
+    container_name: cadvisor
+    restart: always
+    volumes:
+      - /:/rootfs:ro # Mount root filesystem as read-only to monitor system stats
+      - /var/run:/var/run:ro # Mount Docker runtime to see running containers
+      - /sys:/sys:ro         # Mount sys filesystem as read-only for system information
+      - /var/lib/docker/:/var/lib/docker:ro
+
 volumes:
   db_data_mariadb:
   custom:
+  grafana-storage:
