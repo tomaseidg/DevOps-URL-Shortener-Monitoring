@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: url-shortener-server
+  labels:
+    app: url-shortener-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: url-shortener-server
+  template:
+    metadata:
+      labels:
+        app: url-shortener-server
+    spec:
+      containers:
+        - name: server
+          image: mezozaki12/devops-url-shortener-monitoring-server # not the real image yet
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DB_CLIENT
+              value: mysql2
+            - name: DB_HOST
+              value: mariadb
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_USER
+              value: kutt
+            - name: DB_PASSWORD
+              value: kutt123
+            - name: DB_NAME
+              value: kutt
+
+            - name: REDIS_ENABLED
+              value: "true"    # enable Redis caching
+            - name: REDIS_HOST
+              value: redis-svc # matches the Service name of Redis ClusterIP service
+            - name: REDIS_PORT
+              value: "6379"    # matches the Redis service port (not targetPort)
+          volumeMounts:
+            - name: custom-volume
+              mountPath: /kutt/custom
+      volumes:
+        - name: custom-volume
+          emptyDir: {}   # ephemeral; data will be lost on pod restart

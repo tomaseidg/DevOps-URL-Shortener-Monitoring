@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: url-shortener-service
+spec:
+  type: NodePort        # NodePort to expose the service externally
+  selector:
+    app: url-shortener-server # must match the label in the Deployment
+  ports:
+    - port: 3000         # service port
+      targetPort: 3000   # container port
+      nodePort: 30080    # external Minikube port (access via minikube IP:30080)
