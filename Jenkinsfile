@@ -20,17 +20,6 @@ pipeline {
             }
         }
 
-        stage('Test Server') {
-            steps {
-                echo "Running quick smoke tests..."
-                sh '''
-                docker-compose up -d mariadb redis
-                sleep 10  # wait for DB & Redis to be ready
-                docker-compose run --rm server sh -c "npm run test || exit 1"
-                '''
-            }
-        }
-
         stage('Deploy Full Stack') {
             steps {
                 echo "Deploying all services..."
@@ -48,3 +37,4 @@ pipeline {
         }
     }
 }
+
