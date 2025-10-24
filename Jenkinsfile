@@ -1,63 +1,51 @@
 pipeline {
     agent any
+
     environment {
-        DOCKER_IMAGE = 'tomaseidg/kutt-app:${BUILD_NUMBER}'  
-        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'  
+        COMPOSE_PROJECT_NAME = "kutt_app"
     }
+
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/tomaseidg/DevOps-URL-Shortener-Monitoring.git'  
+                echo "Checking out the code..."
+                checkout scm
             }
         }
-        stage('Build and Test') {
+
+        stage('Build Docker Images') {
             steps {
-                script {
-                    // Install Node.js dependencies and run tests (from package.json)
-                    sh 'npm install'
-                    sh 'npm test'  // Assumes tests exist; add if missing (e.g., Jest/Mocha)
-                }
+                echo "Building Docker images..."
+                sh 'docker-compose build'
             }
         }
-        stage('Build Docker Image') {
+
+        stage('Test') {
             steps {
-                script {
-                    // Build the image using your Dockerfile (Node.js app)
-                    docker.build(env.DOCKER_IMAGE)
-                }
+                echo "Running tests..."
+                
+                sh '''
+                docker-compose up -d mariadb redis
+                sleep 10  # wait for DB & Redis to start
+                docker-compose run --rm server sh -c "npm run test || exit 1"
+                '''
             }
         }
-        stage('Push to Docker Hub') {
-            steps {
-                script {
-                    // Authenticate and push the image
-                    docker.withRegistry('https://index.docker.io/v1/', env.DOCKER_CREDENTIALS_ID) {
-                        docker.image(env.DOCKER_IMAGE).push()
-                    }
-                }
-            }
-        }
+
         stage('Deploy') {
             steps {
-                script {
-                    // Stop existing containers, update docker-compose.yml to use new image, and redeploy
-                    sh 'docker-compose down || true'  // Gracefully stop if running
-                    // Replace 'build:' with the pulled image for the 'server' service
-                    sh 'sed -i "s|build:|image: ${DOCKER_IMAGE}|g" docker-compose.yml'
-                    sh 'docker-compose up -d'  // Start with new image; monitoring stack (Prometheus/Grafana) persists
-                }
+                echo "Deploying services..."
+                sh 'docker-compose up -d'
             }
         }
     }
+
     post {
-        always {
-            sh 'docker system prune -f'  // Clean up unused images/containers
-        }
         success {
-            echo 'Pipeline succeeded! Kutt app deployed with monitoring.'
+            echo 'Pipeline succeeded! ✅'
         }
         failure {
-            echo 'Pipeline failed. Check logs for issues (e.g., tests, Docker push).'
+            echo 'Pipeline failed! ❌'
         }
     }
 }
