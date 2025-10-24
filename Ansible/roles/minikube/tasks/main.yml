@@ -1,0 +1,20 @@
+---
+- name: Check if Minikube is installed
+  ansible.builtin.command: minikube version
+  register: minikube_check
+  ignore_errors: yes
+
+- name: Install Minikube if missing
+  become: true
+  ansible.builtin.get_url:
+    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    dest: /usr/local/bin/minikube
+    mode: '0755'
+  when: minikube_check.rc != 0
+
+- name: Start Minikube cluster (as ubuntu user)
+  become: true
+  become_user: ubuntu
+  ansible.builtin.command: minikube start --driver=docker
+  args:
+    creates: /home/ubuntu/.minikube

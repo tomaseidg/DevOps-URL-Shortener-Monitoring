@@ -1,0 +1,6 @@
+---
+- name: Update packages with apt
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: dist
+  when: ansible_os_family == "Debian"
