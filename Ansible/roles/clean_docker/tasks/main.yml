@@ -1,0 +1,7 @@
+---
+- name: clean docker packages before apt update
+  ansible.builtin.shell: |
+    find /etc/apt/sources.list.d/ -type f -name "docker*.list" -delete || true
+    apt-get clean
+  args:
+    executable: /bin/bash

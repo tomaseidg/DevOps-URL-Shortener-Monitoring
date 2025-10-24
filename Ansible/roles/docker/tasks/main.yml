@@ -1,0 +1,57 @@
+---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Check if Docker is already installed
+  ansible.builtin.command: docker --version
+  register: docker_check
+  ignore_errors: yes
+
+- name: Show Docker version if installed
+  ansible.builtin.debug:
+    msg: "Docker already installed: {{ docker_check.stdout }}"
+  when: docker_check.rc == 0
+
+- name: Install Docker only if missing
+  ansible.builtin.apt:
+    name: docker.io
+    state: present
+  when: docker_check.rc != 0
+
+- name: Ensure Docker service is running and enabled
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Add ubuntu user to docker group
+  ansible.builtin.user:
+    name: ubuntu
+    groups: docker
+    append: yes
+
+- name: Check if Docker Compose exists
+  ansible.builtin.command: docker-compose --version
+  register: compose_check
+  ignore_errors: yes
+
+- name: Install Docker Compose if missing
+  ansible.builtin.shell: |
+    curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+  args:
+    executable: /bin/bash
+  when: compose_check.rc != 0
+
+- name: Show Docker and Compose versions
+  ansible.builtin.shell: |
+    docker --version
+    docker-compose --version
+  register: versions
+  changed_when: false
+
+- name: Print versions
+  ansible.builtin.debug:
+    msg: "{{ versions.stdout_lines }}"
+

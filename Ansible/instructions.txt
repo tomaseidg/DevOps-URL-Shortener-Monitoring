@@ -1,0 +1,7 @@
+1- add file group_test.pem to .ssh file
+2- cd into ansible folder
+3- run the command 
+ansible-galaxy collection install -r collections/requirements.yml
+to install ansible packages
+4- run command 
+ansible-playbook playbook.yml
