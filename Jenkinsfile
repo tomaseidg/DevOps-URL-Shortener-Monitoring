@@ -13,28 +13,27 @@ pipeline {
             }
         }
 
-        stage('Build Docker Images') {
+        stage('Build Server Only') {
             steps {
-                echo "Building Docker images..."
-                sh 'docker-compose build'
+                echo "Building server Docker image using cache..."
+                sh 'docker-compose build server'
             }
         }
 
-        stage('Test') {
+        stage('Test Server') {
             steps {
-                echo "Running tests..."
-                
+                echo "Running quick smoke tests..."
                 sh '''
                 docker-compose up -d mariadb redis
-                sleep 10  # wait for DB & Redis to start
+                sleep 10  # wait for DB & Redis to be ready
                 docker-compose run --rm server sh -c "npm run test || exit 1"
                 '''
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy Full Stack') {
             steps {
-                echo "Deploying services..."
+                echo "Deploying all services..."
                 sh 'docker-compose up -d'
             }
         }
