@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         COMPOSE_PROJECT_NAME = "kutt_app"
+        // Load JWT secret from Jenkins credentials (Secret Text)
+        JWT_SECRET = credentials('JWT_SECRET')
     }
 
     stages {
@@ -16,14 +18,21 @@ pipeline {
         stage('Build Server Only') {
             steps {
                 echo "Building server Docker image using cache..."
-                sh 'docker-compose build server'
+                sh '''
+                    export JWT_SECRET=${JWT_SECRET}
+                    docker-compose build server
+                '''
             }
         }
 
         stage('Deploy Full Stack') {
             steps {
                 echo "Deploying all services..."
-                sh 'docker-compose up -d'
+                sh '''
+                    export JWT_SECRET=${JWT_SECRET}
+                    docker-compose down
+                    docker-compose up -d
+                '''
             }
         }
     }
@@ -37,4 +46,3 @@ pipeline {
         }
     }
 }
-
