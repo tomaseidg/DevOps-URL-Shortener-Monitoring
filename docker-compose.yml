@@ -1,100 +1,102 @@
+version: "3.9"
+
 services:
   server:
     build:
       context: .
-    volumes:
-      - custom:/kutt/custom
+    container_name: kutt_app
+    restart: always
     environment:
-        DB_CLIENT: mysql2
-        DB_HOST: kutt_app-mariadb-1
-        DB_PORT: 3306
-        REDIS_ENABLED: true
-        REDIS_HOST: redis
-        REDIS_PORT: 6379
+      # --- DATABASE CONFIG ---
+      DB_CLIENT: mysql2
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_NAME: kutt
+      DB_USER: root
+      DB_PASSWORD: db_pass
+      DB_SSL: "false"
 
-        JWT_SECRET: ${JWT_SECRET}
-        SITE_NAME: Kutt
-        DEFAULT_DOMAIN: https://13.38.61.104:3000/
-        DISALLOW_REGISTRATION: false
-        ADMIN_EMAILS: admin@admin.com
-        MAIL_FROM: noreply@example.com
-        MAIL_HOST: smtp.example.com
-        MAIL_PORT: 587
-        MAIL_USER: user@example.com
-        MAIL_PASSWORD: your_password
+      # --- REDIS CONFIG ---
+      REDIS_ENABLED: "true"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
 
+      # --- OTHER OPTIONS ---
+      NODE_ENV: production
+      PORT: 3000
+      SITE_NAME: Kutt
+      DEFAULT_DOMAIN: localhost:3000
+      JWT_SECRET: Depi_final_project
+      CUSTOM_DOMAIN_USE_HTTPS: "false"
+      TRUST_PROXY: "false"
 
     ports:
-      - 3000:3000
+      - "3000:3000"
     depends_on:
       mariadb:
         condition: service_healthy
       redis:
         condition: service_started
+    volumes:
+      - custom:/kutt/custom
+
   mariadb:
     image: mariadb:10
+    container_name: mariadb
     restart: always
-    healthcheck:
-      test: ['CMD-SHELL', 'mysql ${DB_NAME} --user=${DB_USER} --password=${DB_PASSWORD} --execute "SELECT 1;"']
-      interval: 3s
-      retries: 5
-      start_period: 30s
+    environment:
+      MARIADB_ROOT_PASSWORD: db_pass
+      MARIADB_DATABASE: kutt
+      # No need to redefine MARIADB_USER=root — it’s implied for root
     volumes:
       - db_data_mariadb:/var/lib/mysql
-    environment:
-      MARIADB_DATABASE: ${DB_NAME}
-      MARIADB_USER: ${DB_USER}
-      MARIADB_PASSWORD: ${DB_PASSWORD}
-      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
-    expose:
-      - 3306
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -pdb_pass | grep 'mysqld is alive'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
   redis:
     image: redis:alpine
+    container_name: redis
     restart: always
-    expose:
-      - 6379
-      
-########### Monitoring Stack ###########
-  prometheus:   
-    image: prom/prometheus:latest    
-    
-    container_name: prometheus       
-    
     ports:
-      - "9090:9090"  
-    
-    volumes:   # Mount local prometheus.yml into the container 
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
- 
-    restart: unless-stopped  # Auto-restart Prometheus if it crashes
+      - "6379:6379"
 
-  grafana:       # Service name (Grafana)
-    
-    image: grafana/grafana:latest    
-    
-    container_name: grafana          
-    
+  ########### Monitoring Stack ###########
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
     ports:
-      - "4000:3000"   
-    
+      - "9090:9090"
     volumes:
-      - grafana-storage:/var/lib/grafana  # Use a named volume to persist Grafana data (dashboards, users, settings)
-        
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "4000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
     restart: unless-stopped
     depends_on:
-      - prometheus   # Ensure Grafana starts after Prometheus
+      - prometheus
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
-    command:
-    - "--docker_only=true"
-
     container_name: cadvisor
+    command:
+      - "--docker_only=true"
     restart: always
     volumes:
-      - /:/rootfs:ro # Mount root filesystem as read-only to monitor system stats
-      - /var/run:/var/run:ro # Mount Docker runtime to see running containers
-      - /sys:/sys:ro         # Mount sys filesystem as read-only for system information
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
 
 volumes:

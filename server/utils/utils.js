@@ -73,7 +73,7 @@ function addProtocol(url) {
 }
 
 function getShortURL(address, domain) {
-  const protocol = (env.CUSTOM_DOMAIN_USE_HTTPS || !domain) && !env.isDev ? "https://" : "http://";
+  const protocol = "http://"; // Force HTTP always
   const link = `${domain || env.DEFAULT_DOMAIN}/${address}`;
   const url = `${protocol}${link}`;
   return { address, link, url };
