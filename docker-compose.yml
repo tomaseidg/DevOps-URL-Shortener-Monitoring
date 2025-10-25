@@ -15,6 +15,7 @@ services:
       DB_USER: root
       DB_PASSWORD: db_pass
       DB_SSL: "false"
+      DB_SSL_REJECT_UNAUTHORIZED: "false"
 
       # --- REDIS CONFIG ---
       REDIS_ENABLED: "true"
