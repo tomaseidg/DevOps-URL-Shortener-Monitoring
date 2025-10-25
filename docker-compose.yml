@@ -25,7 +25,7 @@ services:
       NODE_ENV: production
       PORT: 3000
       SITE_NAME: Kutt
-      DEFAULT_DOMAIN: localhost:3000
+      DEFAULT_DOMAIN: 13.38.61.104:3000
       JWT_SECRET: Depi_final_project
       CUSTOM_DOMAIN_USE_HTTPS: "false"
       TRUST_PROXY: "false"
