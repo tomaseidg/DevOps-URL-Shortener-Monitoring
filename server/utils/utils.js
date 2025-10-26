@@ -57,8 +57,8 @@ function setToken(res, token) {
 function deleteCurrentToken(res) {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,     // ✅ must match login cookie
-    sameSite: "lax"    // optional, ensures compatibility
+    secure: false,     
+    sameSite: "lax"   //ensures compatibility
   });
 }
 
