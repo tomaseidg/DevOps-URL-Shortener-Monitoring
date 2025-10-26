@@ -29,7 +29,11 @@ services:
       DEFAULT_DOMAIN: 13.38.61.104:3000
       JWT_SECRET: Depi_final_project
       CUSTOM_DOMAIN_USE_HTTPS: "false"
-      TRUST_PROXY: "false"
+      TRUST_PROXY: "true"
+      FORCE_HTTPS: "false"
+      COOKIE_SECURE: "false"
+      COOKIE_DOMAIN: "13.38.61.104"
+      COOKIE_SAME_SITE: "lax"
 
     ports:
       - "3000:3000"
