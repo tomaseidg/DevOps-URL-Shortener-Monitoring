@@ -59,7 +59,7 @@ const spec = {
   MAIL_PORT: num({ default: 587 }),
   MAIL_SECURE: bool({ default: false }),
   MAIL_USER: str({ default: "" }),
-  MAIL_FROM: str({ default: "", example: "Kutt <support@kutt.it>" }),
+  MAIL_FROM: str({ default: "", example: "Kutt <>" }),
   MAIL_PASSWORD: str({ default: "" }),
   ENABLE_RATE_LIMIT: bool({ default: false }),
   REPORT_EMAIL: str({ default: "" }),
