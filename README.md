@@ -46,7 +46,7 @@ Technologies used: **Docker, Docker Compose, Prometheus, Grafana, SQLite, Flask/
 
 The project will run for **4 weeks**, starting from **_/_/__** and ending on **_/_/__**.  
 
-### **Week 1 (_/_ - _/_): Build & Containerize the URL Shortener**
+### **Week 1: Build & Containerize the URL Shortener**
 - **Tasks:**  
   - Develop webservice with POST `/shorten` and GET `/<short_code>` endpoints.  
   - Use SQLite for URL storage.  
@@ -56,7 +56,7 @@ The project will run for **4 weeks**, starting from **_/_/__** and ending on **_
 
 ---
 
-### **Week 2 (_/_ - _/_): Instrumenting with Prometheus**
+### **Week 2: Instrumenting with Prometheus**
 - **Tasks:**  
   - Add custom metrics (URL created, redirects, errors, latency).  
   - Configure Prometheus to scrape metrics.  
@@ -67,7 +67,7 @@ The project will run for **4 weeks**, starting from **_/_/__** and ending on **_
 
 ---
 
-### **Week 3 (_/_ - _/_): Visualization with Grafana**
+### **Week 3: Visualization with Grafana**
 - **Tasks:**  
   - Add Grafana service to the stack.  
   - Connect Grafana to Prometheus.  
@@ -77,7 +77,7 @@ The project will run for **4 weeks**, starting from **_/_/__** and ending on **_
 
 ---
 
-### **Week 4 (_/_ - _/_): Alerting, Persistence & Documentation**
+### **Week 4: Alerting, Persistence & Documentation**
 - **Tasks:**  
   - Configure Grafana alerts (e.g., high 404 rate, latency issues).  
   - Add Docker volumes for SQLite, Prometheus, and Grafana data.  
