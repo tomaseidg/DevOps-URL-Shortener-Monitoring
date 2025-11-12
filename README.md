@@ -89,3 +89,8 @@ The project will run for **4 weeks**, starting from **_/_/__** and ending on **_
   - Final project documentation.  
 
 ---
+
+## Acknowledgements
+Special thanks to **Digital Egypt Pioneers Initiative (DEPI)** for guidance and mentorship during this project.  
+Also, appreciation to the **DevOps track mentors** for continuous support and valuable insights — especially **Eng. [Ahmed Gamiel](https://github.com/Ahmed-Gamil-osman)** for his exceptional guidance, technical support, and motivation throughout the DevOps journey.
+
